@@ -1,0 +1,55 @@
+/* Dark Mode Theme */
+:root {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --header-bg: #1a1a1a;
+    --accent: #5dade2;
+    --border-color: #404040;
+}
+
+/* Adjust header for dark mode */
+header {
+    border-bottom-color: rgba(255,255,255,0.05);
+}
+
+.search-box {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    color: var(--text-primary);
+}
+
+.search-box::placeholder {
+    color: rgba(255,255,255,0.4);
+}
+
+.search-box:focus {
+    background: rgba(255,255,255,0.08);
+}
+
+/* Adjust category pills for dark mode */
+.category-pill {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+/* Essay cards in dark mode */
+.essay-card {
+    background-color: var(--bg-secondary);
+}
+
+/* Essay page adjustments */
+.essay-header {
+    background: var(--bg-secondary);
+    border-bottom-color: var(--border-color);
+}
+
+/* Code blocks in dark mode */
+.essay-body code {
+    background: rgba(255,255,255,0.05);
+}
+
+.essay-body pre {
+    background: rgba(255,255,255,0.05);
+}

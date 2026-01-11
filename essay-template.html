@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Essay Title] - Eva's Essays</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../dark-mode.css" disabled id="dark-mode-stylesheet">
+</head>
+<body>
+    <header class="essay-header">
+        <nav class="breadcrumb">
+            <a href="../../index.html">Home</a> →
+            <a href="../../index.html?category=[category]">[Category]</a>
+        </nav>
+        <button id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    </header>
+
+    <article class="essay-content">
+        <div class="essay-meta">
+            <h1>[Essay Title]</h1>
+            <div class="meta-info">
+                <span class="category">[Category]</span>
+                <span class="reading-time" id="reading-time">5 min read</span>
+                <time datetime="2026-01-11">January 11, 2026</time>
+            </div>
+            <div class="tags">
+                <a href="../../index.html?tag=tag1" class="tag">#tag1</a>
+                <a href="../../index.html?tag=tag2" class="tag">#tag2</a>
+                <a href="../../index.html?tag=tag3" class="tag">#tag3</a>
+            </div>
+        </div>
+
+        <div class="essay-body" id="essay-body">
+            <!-- USER WRITES ESSAY CONTENT HERE IN HTML -->
+
+            <p>Write your essay introduction here. This is where you set the context and hook your readers with an engaging opening.</p>
+
+            <h2>First Major Section</h2>
+            <p>Continue your essay with the main content. Use headings to organize your thoughts and make the essay easy to scan.</p>
+
+            <p>You can use various HTML elements to structure your content:</p>
+
+            <ul>
+                <li>Bullet points for lists</li>
+                <li>Bold and italic text for emphasis</li>
+                <li>Links to external resources</li>
+            </ul>
+
+            <h3>Subsection</h3>
+            <p>Break down complex topics with subsections. This helps readers follow your argument more easily.</p>
+
+            <blockquote>
+                <p>Use blockquotes for notable quotes or to highlight key insights.</p>
+            </blockquote>
+
+            <h2>Second Major Section</h2>
+            <p>Continue developing your ideas. Each paragraph should connect logically to the next.</p>
+
+            <p>You can include code examples if relevant:</p>
+            <pre><code>function example() {
+    return "Hello, World!";
+}</code></pre>
+
+            <p>Or inline code like <code>const x = 42</code> within your paragraphs.</p>
+
+            <h2>Conclusion</h2>
+            <p>Wrap up your essay with a conclusion that ties together your main points and leaves readers with something to think about.</p>
+
+            <!-- END ESSAY CONTENT -->
+        </div>
+    </article>
+
+    <footer>
+        <a href="../../index.html">← Back to all essays</a>
+        <p>&copy; 2026 Eva</p>
+    </footer>
+
+    <script src="../../scripts/reading-time.js"></script>
+    <script src="../../scripts/theme-toggle.js"></script>
+</body>
+</html>
