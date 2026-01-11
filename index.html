@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eva's Essays</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dark-mode.css" disabled id="dark-mode-stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Eva's Essays</h1>
+            <p>Thoughts on technology, philosophy, and life</p>
+            <div class="header-controls">
+                <input type="text" id="search-box" class="search-box" placeholder="Search essays..." aria-label="Search essays">
+                <button id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="category-nav">
+        <div class="category-pills">
+            <a href="#" class="category-pill active" data-category="all">All</a>
+            <a href="#" class="category-pill" data-category="technology">Technology</a>
+            <a href="#" class="category-pill" data-category="philosophy">Philosophy</a>
+            <a href="#" class="category-pill" data-category="personal">Personal</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="essays">
+            <div class="filter-info" id="filter-info"></div>
+            <div id="essays-container">
+                <!-- Essays will be dynamically rendered here -->
+            </div>
+            <div id="no-results" class="no-results" style="display: none;">
+                No essays found matching your search.
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Eva</p>
+    </footer>
+
+    <script>
+        // Essays data - Add new essays here
+        const essays = [
+            {
+                title: "The Ethics of Artificial Intelligence",
+                slug: "ethics-of-ai",
+                category: "technology",
+                tags: ["ai", "ethics", "society"],
+                date: "2026-01-11",
+                readingTime: "5 min",
+                excerpt: "As AI systems become more sophisticated, we must grapple with fundamental questions about autonomy, bias, and accountability in algorithmic decision-making.",
+                path: "essays/technology/ethics-of-ai.html"
+            },
+            {
+                title: "On Slow Living",
+                slug: "on-slow-living",
+                category: "personal",
+                tags: ["lifestyle", "mindfulness", "productivity"],
+                date: "2026-01-05",
+                readingTime: "4 min",
+                excerpt: "In a world obsessed with optimization and efficiency, I've been experimenting with intentional slowness and what it teaches us about presence and meaning.",
+                path: "essays/personal/on-slow-living.html"
+            },
+            {
+                title: "The Ship of Theseus Paradox",
+                slug: "ship-of-theseus",
+                category: "philosophy",
+                tags: ["identity", "metaphysics", "classical"],
+                date: "2025-12-28",
+                readingTime: "6 min",
+                excerpt: "If you replace every plank of a ship one by one, is it still the same ship? This ancient thought experiment reveals deep questions about identity and change.",
+                path: "essays/philosophy/ship-of-theseus.html"
+            }
+        ];
+
+        // State
+        let currentCategory = 'all';
+        let currentTag = null;
+        let currentSearch = '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+            const tagParam = urlParams.get('tag');
+            const searchParam = urlParams.get('q');
+
+            if (categoryParam) {
+                currentCategory = categoryParam;
+                updateActiveCategoryPill();
+            }
+            if (tagParam) {
+                currentTag = tagParam;
+            }
+            if (searchParam) {
+                currentSearch = searchParam;
+                document.getElementById('search-box').value = searchParam;
+            }
+
+            renderEssays();
+        });
+
+        // Filter and render essays
+        function renderEssays() {
+            let filtered = essays;
+
+            // Apply category filter
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(e => e.category === currentCategory);
+            }
+
+            // Apply tag filter
+            if (currentTag) {
+                filtered = filtered.filter(e => e.tags.includes(currentTag));
+            }
+
+            // Apply search filter
+            if (currentSearch && currentSearch.length >= 2) {
+                const query = currentSearch.toLowerCase();
+                filtered = filtered.filter(e =>
+                    e.title.toLowerCase().includes(query) ||
+                    e.excerpt.toLowerCase().includes(query) ||
+                    e.tags.some(tag => tag.toLowerCase().includes(query)) ||
+                    e.category.toLowerCase().includes(query)
+                );
+            }
+
+            // Update filter info
+            const filterInfo = document.getElementById('filter-info');
+            if (currentCategory !== 'all' || currentTag || currentSearch) {
+                let info = `Showing ${filtered.length} of ${essays.length} essays`;
+                if (currentCategory !== 'all') info += ` in ${currentCategory}`;
+                if (currentTag) info += ` tagged #${currentTag}`;
+                if (currentSearch) info += ` matching "${currentSearch}"`;
+                filterInfo.textContent = info;
+                filterInfo.style.display = 'block';
+            } else {
+                filterInfo.style.display = 'none';
+            }
+
+            // Render or show no results
+            const container = document.getElementById('essays-container');
+            const noResults = document.getElementById('no-results');
+
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                container.innerHTML = filtered.map(essay => `
+                    <a href="${essay.path}" class="essay-card">
+                        <h3>${essay.title}</h3>
+                        <div class="excerpt">${essay.excerpt}</div>
+                        <div class="meta-info">
+                            <span class="category">${essay.category}</span>
+                            <span class="reading-time">${essay.readingTime} read</span>
+                            <span class="date">${formatDate(essay.date)}</span>
+                        </div>
+                        <div class="tags">
+                            ${essay.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+                    </a>
+                `).join('');
+
+                // Add click handlers to tags
+                document.querySelectorAll('.essay-card .tag').forEach(tagEl => {
+                    tagEl.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const tag = this.textContent.substring(1); // Remove #
+                        currentTag = tag;
+                        updateURL();
+                        renderEssays();
+                    });
+                });
+            }
+        }
+
+        // Category filter
+        document.querySelectorAll('.category-pill').forEach(pill => {
+            pill.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentCategory = this.dataset.category;
+                currentTag = null; // Reset tag filter
+                updateActiveCategoryPill();
+                updateURL();
+                renderEssays();
+            });
+        });
+
+        function updateActiveCategoryPill() {
+            document.querySelectorAll('.category-pill').forEach(pill => {
+                pill.classList.toggle('active', pill.dataset.category === currentCategory);
+            });
+        }
+
+        // Search
+        let searchTimeout;
+        document.getElementById('search-box').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentSearch = e.target.value;
+                updateURL();
+                renderEssays();
+            }, 300); // Debounce 300ms
+        });
+
+        // Update URL without reload
+        function updateURL() {
+            const params = new URLSearchParams();
+            if (currentCategory !== 'all') params.set('category', currentCategory);
+            if (currentTag) params.set('tag', currentTag);
+            if (currentSearch) params.set('q', currentSearch);
+
+            const newURL = params.toString() ? `?${params.toString()}` : window.location.pathname;
+            window.history.replaceState({}, '', newURL);
+        }
+
+        // Date formatting
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+    </script>
+
+    <script src="scripts/theme-toggle.js"></script>
+</body>
+</html>
